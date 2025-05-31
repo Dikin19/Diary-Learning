@@ -1,6 +1,6 @@
 
 
-function App() {
+function Home() {
 
   let data = [
     {
@@ -50,4 +50,4 @@ function App() {
 
 }
 
-export default App
+export default Home
