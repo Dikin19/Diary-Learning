@@ -1,4 +1,4 @@
-import { apiClient } from './client'
+import { apiClient } from './client.js'
 
 /**
  * TASK: use `apiClient` to fetch list of diary content
@@ -9,21 +9,56 @@ import { apiClient } from './client'
  * Note that:
  * - `status` param must exist and have value of `'posted'`
  */
-export async function getDiaryFeed() {
-  const ids = [
-    359007,
-    358317,
-    343275,
-    342861,
-    342723,
-    342240,
-    341343,
-    296907,
-    253782,
-    177123,
-  ]
-  ...
-}
+    export async function getDiaryFeed() {
+      const ids = [
+        359007,
+        177123,
+        343275,
+        341343,
+        358317,
+        343275,
+        342861,
+        342723,
+        342240,
+        341343,
+        296907,
+        253782,
+        177123,
+      ]
+      
+      try {
+
+        const response = await apiClient.get('/cms/diary',{
+          params: {
+            ids,
+            status: 'posted'
+          },
+        });
+
+        return response.data;
+
+        
+      } catch (error) {
+
+        const message = error.response? error.response.data?.message || `API Error: ${error.response.status}`: error.message
+        throw new Error (message)
+      }
+    }
+
+    // const diaryFeed = async ()=>{
+    //   try {
+        
+    //     const diaries = await getDiaryFeed();
+    //     console.log('Diary Feed:',diaries);
+
+    //   } catch (error) {
+
+    //     console.log('Gagal mengambil data', error);
+        
+    //   }
+    // }
+
+    // diaryFeed()
 
 /**
  * TASK: use `apiClient` to fetch diary content by id
@@ -34,6 +69,6 @@ export async function getDiaryFeed() {
  * Note that:
  * - `status` param must exist and have value of `'posted'`
  */
-export async function getDiaryContentById(id) {
-  ...
-}
+// export async function getDiaryContentById(id) {
+//   ...
+// }
