@@ -1,7 +1,7 @@
 // import reactLogo from '../app/assets/react.svg'
 // import viteLogo from '../public/vite.svg'
 
-function Test() {
+function DiaryContent() {
 
     let data = [
         {
@@ -54,4 +54,4 @@ function Test() {
 
 }
 
-export default Test
+export default DiaryContent

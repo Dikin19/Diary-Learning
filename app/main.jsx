@@ -1,9 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router";
-import Home from "./Pages/Home";
+import Reactbits from "./Pages/Reactbits";
 import './Css/index.css'
 import React from 'react'
 import ReactDOM from "react-dom/client";
-import Test from "./Pages/Test";
+import DiaryContent from "./Pages/DiaryContent";
+import DiaryFeed from "./Pages/DiaryFeed";
 
 
 
@@ -15,8 +16,9 @@ ReactDOM.createRoot(root).render(
 
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/test" element={<Test />} />
+      <Route path="/" element={<DiaryFeed />} />
+      <Route path="/reactbits" element={<Reactbits />} />
+      <Route path="/diary" element={<DiaryContent />} />
 
     </Routes>
   </BrowserRouter>
