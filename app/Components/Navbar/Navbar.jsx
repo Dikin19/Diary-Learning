@@ -12,7 +12,7 @@ export default function Navbar() {
         { label: "Popular Diaries", stars: "⭐", color: "#A78BFA", hover: "#0EA5E9", to: "/diary/177123 " },
         { label: "Popular Diaries", stars: "⭐⭐", color: "#A78BFA", hover: "#EC4899", to: "/diary/341343 " },
         { label: "Popular Diaries", stars: "⭐⭐⭐", color: "#A78BFA", hover: "#F59E0B", to: "/diary/342240 " },
-        { label: "Popular Diaries", stars: "⭐⭐⭐⭐", color: "#A78BFA", hover: "#7C3AED", to: "/diary/253782" },
+        { label: "Popular Diaries", stars: "⭐⭐⭐⭐", color: "#A78BFA", hover: "#7C3AED", to: "/diary/358317" },
     ];
 
     return (

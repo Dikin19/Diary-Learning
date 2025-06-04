@@ -9,7 +9,7 @@ import { renderDiaryContent, getDiaryContentSEOAttributes, getSizeOptimizedImage
 import YoutubeEmbed from "../Components/Embed/YoutubeEmbed.jsx";
 // import InstagramEmbed from "../../app/Components/InstagramEmbed";
 // import TwitterEmbed from "../../app/Components/TwitterEmbed";
-// import TiktokEmbed from "../../app/Components/TiktokEmbed";
+import TiktokEmbed from "../Components/Embed/TiktokEmbed.jsx"
 import Navbarr from "../Components/Navbar/Navbar";
 import CircularText from "../Components/Reactbits/CircularText/CircularText";
 
