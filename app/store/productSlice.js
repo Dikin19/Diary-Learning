@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getDiaryFeed } from "../../api/cms";
+import { getDiaryContentById, getDiaryFeed } from "../../api/cms";
 
 
     const  productSlice = createSlice({
@@ -9,6 +9,7 @@ import { getDiaryFeed } from "../../api/cms";
             items: [],
             isLoading: false,
             error: null,
+            detail: []
         },
 
         reducers: {
@@ -27,10 +28,15 @@ import { getDiaryFeed } from "../../api/cms";
                 state.isLoading = false;
                 state.error = action.payload;
             },
+
+            fecthDiaryById: (state, action) => {
+                state.detail = action.payload;
+                state.isLoading = false;
+            },
         },
     });
 
-    export const { fetchDiaries, fetchDiariesFailure, fetchDiariesStart} = productSlice.actions
+    export const { fetchDiaries, fetchDiariesFailure, fetchDiariesStart, fecthDiaryById} = productSlice.actions
     export const productReducer = productSlice.reducer;
 
     export function fetchDiariy (){
@@ -51,5 +57,25 @@ import { getDiaryFeed } from "../../api/cms";
             }
         }
     }
+
+    export function getDiaryById(id){
+        return async (dispatch) => {
+            dispatch(fetchDiariesStart());
+
+            try {
+                
+                const diariesById = await getDiaryContentById(id)
+                console.log(diariesById, 'productSlice');
+                dispatch(fecthDiaryById(diariesById))
+
+            } catch (error) {
+                
+                console.log(error);
+                dispatch(fetchDiariesFailure(error.response?.data?.message))
+            }
+        }
+    }
+
+    
 
     

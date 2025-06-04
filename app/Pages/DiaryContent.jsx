@@ -1,52 +1,45 @@
-// import reactLogo from '../app/assets/react.svg'
-// import viteLogo from '../public/vite.svg'
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getDiaryById } from "../store/ProductSlice";
+import { useParams } from "react-router";
+import CircularText from "../Components/Reactbits/CircularText/CircularText";
 
-function DiaryContent() {
+export default function DiaryContent() {
 
-    let data = [
-        {
-            nama: "dikin",
-            age: 2,
-            hoby: "sepak bola"
-        },
-        {
-            nama: "sodikin",
-            age: 2,
-            hoby: "sepak bola"
-        },
-        {
-            nama: "Muhamad",
-            age: 2,
-            hoby: "sepak bola"
-        },
-    ]
+    const params = useParams();
+    const dispatch = useDispatch();
+    const diaries = useSelector((state) => state.product.detail)
+    const error = useSelector((state) => state.product.error)
+    const isLoading = useSelector((state) => state.product.isLoading)
+
+    useEffect(() => {
+        dispatch(getDiaryById(params.id))
+    }, [dispatch], params.id);
+
+    // console.log(diaries, 'diaryById')
+    const arrDiary = diaries.content
+    const diary = arrDiary[0]
+    // console.log(diary, 'newData')
+
+    if (isLoading)
+        return (
+            <div className="fixed inset-0 flex justify-center items-center bg-white bg-opacity-70 z-50">
+                <CircularText
+                    text="WAIT * FOR LOADING * CONNECTION * "
+                    onHover="speedUp"
+                    spinDuration={50}
+                    className="absolute mt-4 ml-4"
+                    color="#A78BFA"
+                />
+            </div>
+        );
+
+    if (error) return <p className="text-red-600 text-center mt-10">{error}</p>;
 
     return (
         <div className="container mx-auto p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {data.map((el, index) => (
-                <div
-                    key={index}
-                    className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300"
-                >
-                    <img
-                        src={
-                            el.gambar ||
-                            "https://tse3.mm.bing.net/th?id=OIP.PxfOD7S4SeE1uWR-GBMKjwHaE8&pid=Api&P=0&h=180"
-                        }
-                        alt={el.nama}
-                        className="h-40 object-cover"
-                    />
-                    <div className="p-3 flex flex-col justify-between h-[120px]">
-                        <h2 className="text-sm font-medium text-gray-800 line-clamp-2">{el.nama}</h2>
-                        <p className="text-orange-500 font-semibold mt-1 text-base">
-                            {el.harga ? `Rp ${el.harga.toLocaleString()}` : 'Rp 0'}
-                        </p>
-                        <button className="mt-2 bg-orange-500 hover:bg-orange-600 text-white text-sm py-1 rounded">
-                            Beli Sekarang
-                        </button>
-                    </div>
-                </div>
-            ))}
+
+
         </div>
 
 
@@ -54,4 +47,3 @@ function DiaryContent() {
 
 }
 
-export default DiaryContent
