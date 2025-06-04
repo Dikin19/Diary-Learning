@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDiariy } from "../store/ProductSlice";
+import Navbar from "../Components/Navbar/Navbar";
 
 export default function DiaryFeed() {
 
@@ -22,6 +23,7 @@ export default function DiaryFeed() {
 
     return (
         <div>
+            <Navbar />
             <h1>isi dari diary menggunakan redux</h1>
             {diaryItems.map((diary) => (
                 <di>

@@ -1,21 +1,18 @@
-import { BrowserRouter, Route, Routes } from "react-router";
-import Reactbits from "./Pages/Reactbits";
-import './Css/index.css'
-import React from 'react'
-import ReactDOM from "react-dom/client";
-import DiaryContent from "./Pages/DiaryContent";
-import DiaryFeed from "./Pages/DiaryFeed";
-import { Provider } from "react-redux";
-import store from "./store";
+import React from 'react';
+import ReactDOM from 'react-dom/client'; // ✅ React 18
+import { BrowserRouter, Routes, Route } from 'react-router-dom'; // ✅ gunakan `Routes`, bukan `Switch`
+import { Provider } from 'react-redux';
 
+import Reactbits from './Pages/Reactbits';
+import DiaryContent from './Pages/DiaryContent';
+import DiaryFeed from './Pages/DiaryFeed';
+import './Css/index.css';
+import store from './store';
 
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error("Root element not found");
 
-
-
-const root = document.getElementById("root");
-
-ReactDOM.createRoot(root).render(
-
+ReactDOM.createRoot(rootElement).render(
   <Provider store={store}>
     <BrowserRouter>
       <Routes>
@@ -25,6 +22,4 @@ ReactDOM.createRoot(root).render(
       </Routes>
     </BrowserRouter>
   </Provider>
-
-
-)
+);
