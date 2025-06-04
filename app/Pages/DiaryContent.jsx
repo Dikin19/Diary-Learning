@@ -1,21 +1,55 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { Helmet } from "react-helmet";
+
 import { getDiaryById } from "../store/ProductSlice";
-import { useParams } from "react-router";
+import { renderDiaryContent, getDiaryContentSEOAttributes, getSizeOptimizedImageUrl } from "../../utils/cms.js";
+
+import YoutubeEmbed from "../Components/Embed/YoutubeEmbed.jsx";
+// import InstagramEmbed from "../../app/Components/InstagramEmbed";
+// import TwitterEmbed from "../../app/Components/TwitterEmbed";
+// import TiktokEmbed from "../../app/Components/TiktokEmbed";
+import Navbarr from "../Components/Navbar/Navbar";
 import CircularText from "../Components/Reactbits/CircularText/CircularText";
-import { renderDiaryContent } from "../../utils/cms";
+
+// Helper
+function sanitizeTextContent(text) {
+    if (!text) return '';
+    return text
+        .replace(/\\\./g, '.')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .trim();
+}
+
+// Image component
+function RenderImage({ src, alt }) {
+    const optimizedUrl = getSizeOptimizedImageUrl(src, '600x');
+    return (
+        <img
+            src={optimizedUrl || '/fallback-image.png'}
+            alt={alt || 'Image'}
+            className="w-full rounded-lg my-4"
+            loading="lazy"
+            onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = '/fallback-image.png';
+            }}
+        />
+    );
+}
 
 export default function DiaryContent() {
-
-    const params = useParams();
+    const { id } = useParams();
     const dispatch = useDispatch();
-    const diaries = useSelector((state) => state.product.detail)
-    const error = useSelector((state) => state.product.error)
-    const isLoading = useSelector((state) => state.product.isLoading)
+
+    const diaryResponse = useSelector((state) => state.product.detail);
+    const isLoading = useSelector((state) => state.product.isLoading);
+    const error = useSelector((state) => state.product.error);
 
     useEffect(() => {
-        dispatch(getDiaryById(params.id))
-    }, [dispatch], params.id);
+        dispatch(getDiaryById(id));
+    }, [dispatch, id]);
 
     if (isLoading) {
         return (
@@ -33,120 +67,94 @@ export default function DiaryContent() {
 
     if (error) return <p className="text-red-600 text-center mt-10">{error}</p>;
 
+    const diary = diaryResponse?.content?.[0];
 
-    // console.log(diaries, 'diaryById')
-    const arrDiary = diaries.content
-    const diary = arrDiary?.[0];
-    // console.log(diary, 'ObjOfDiary')
+    if (!diary) return <p className="text-center mt-10">Diary tidak ditemukan.</p>;
 
-    if (!diary) return <p className="text-center mt-10">Diary tidak ditemukan.</p>
-
-    console.log("diary:", diary);
-    console.log("diary content type:", typeof diary?.content);
-
-    const contentResult = renderDiaryContent(diary);
-
-    if (!contentResult) {
-        return <p className="text-center mt-10">Gagal merender konten.</p>;
-    }
-
-    const { contentBlocks, metadata } = contentResult;
-
-    console.log("blocks:", contentBlocks);
-    console.log("meta:", metadata);
+    const rendered = renderDiaryContent(diary);
+    const seoAttributes = getDiaryContentSEOAttributes(diary);
 
     return (
-        <div className="max-w-3xl mx-auto p-4">
-            <div className="mb-4 text-sm text-gray-500">
-                <p><strong>Penulis:</strong> {metadata.author?.name || 'Anonim'}</p>
-                <p><strong>Dipublikasikan:</strong> {new Date(metadata.publishedAt).toLocaleDateString()}</p>
-                <p><strong>Estimasi Baca:</strong> {metadata.readingTime} menit</p>
-                <div className="flex gap-2 mt-2">
-                    {metadata.tags.map((tag, idx) => (
-                        <span key={idx} className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">
-                            #{tag}
-                        </span>
-                    ))}
-                </div>
-            </div>
+        <>
+            <Helmet>
+                <title>{seoAttributes.title || 'Your Diary'}</title>
+                <meta name="description" content={seoAttributes.description || ''} />
+                <meta name="keywords" content={seoAttributes.keywords || ''} />
+                <meta name="author" content={seoAttributes.author || 'Redaksi'} />
+                <meta property="og:title" content={seoAttributes.title || 'Your Diary'} />
+                <meta property="og:description" content={seoAttributes.description || ''} />
+                {seoAttributes.image && (
+                    <meta property="og:image" content={seoAttributes.image} />
+                )}
+                <meta property="article:published_time" content={seoAttributes.publishedTime || ''} />
+            </Helmet>
 
-            <article className="prose prose-lg max-w-none">
-                {contentBlocks.map((block, index) => {
-                    switch (block.type) {
-                        case 'heading':
-                            if (block.level === 2) return <h2 key={index}>{block.text}</h2>;
-                            if (block.level === 3) return <h3 key={index}>{block.text}</h3>;
-                            if (block.level === 4) return <h4 key={index}>{block.text}</h4>;
-                            return null;
+            <div className="max-w-2xl mx-auto px-4 py-8">
+                <Navbarr />
 
-                        case 'paragraph':
-                            return <p key={index} dangerouslySetInnerHTML={{ __html: block.text }} />;
+                <h1 className="text-2xl font-bold mb-4">
+                    {diary.meta?.title || 'No Title'}
+                </h1>
 
-                        case 'blockquote':
+                {diary.meta?.image && (
+                    <RenderImage src={diary.meta.image} alt={diary.meta.title || 'Diary Image'} />
+                )}
+
+                <p className="text-gray-500 mb-2">
+                    <strong>Status:</strong> {diary.status}
+                </p>
+                <p className="text-gray-500 mb-6">
+                    <strong>Created at:</strong>{' '}
+                    {new Date(diary.created_dt).toLocaleString()}
+                </p>
+
+                <div>
+                    {rendered.contentBlocks.map((block, idx) => {
+                        if (block.type === 'paragraph') {
+                            const match = block.text.match(/<(YoutubeEmbed|InstagramEmbed|TiktokEmbed|TwitterEmbed)\s+url="([^"]+)"\s*\/?>/);
+                            if (match) {
+                                const [, type, url] = match;
+                                switch (type) {
+                                    case 'YoutubeEmbed': return <YoutubeEmbed key={idx} url={url} />;
+                                    case 'InstagramEmbed': return <InstagramEmbed key={idx} url={url} />;
+                                    case 'TiktokEmbed': return <TiktokEmbed key={idx} url={url} />;
+                                    case 'TwitterEmbed': return <TwitterEmbed key={idx} tweetId={url} />;
+                                    default: return <p key={idx} className="text-red-500">Unsupported embed</p>;
+                                }
+                            }
                             return (
-                                <blockquote key={index} className="border-l-4 pl-4 italic text-gray-600">
-                                    {block.text}
-                                </blockquote>
+                                <p
+                                    key={idx}
+                                    className="mb-4 leading-relaxed text-gray-700"
+                                    dangerouslySetInnerHTML={{ __html: sanitizeTextContent(block.text) }}
+                                />
                             );
+                        }
 
-                        case 'list':
+                        if (block.type === 'heading' && block.level === 3) {
+                            return <h3 key={idx} className="text-xl font-semibold mb-3 text-gray-900">{sanitizeTextContent(block.text)}</h3>;
+                        }
+
+                        if (block.type === 'list') {
                             return (
-                                <ul key={index} className="list-disc list-inside">
-                                    {block.items.map((item, idx) => (
-                                        <li key={idx}>{item}</li>
+                                <ul key={idx} className="list-disc list-inside mb-4 space-y-1 text-gray-700">
+                                    {block.items.map((item, i) => (
+                                        <li key={i}>{sanitizeTextContent(item)}</li>
                                     ))}
                                 </ul>
                             );
+                        }
 
-                        case 'image':
-                            return <img key={index} src={block.url} alt="Diary visual" className="my-4 rounded-lg" />;
+                        if (block.type === 'image') return <RenderImage key={idx} src={block.url} alt="Embedded" />;
+                        if (block.type === 'youtube') return <YoutubeEmbed key={idx} url={block.url} />;
+                        if (block.type === 'instagram') return <InstagramEmbed key={idx} url={block.url} />;
+                        if (block.type === 'twitter') return <TwitterEmbed key={idx} tweetId={block.tweetId} />;
+                        if (block.type === 'tiktok') return <TiktokEmbed key={idx} url={block.url} />;
 
-                        case 'youtube':
-                            return (
-                                <div key={index} className="aspect-w-16 aspect-h-9 my-4">
-                                    <iframe
-                                        src={`https://www.youtube.com/embed/${block.url.split("v=")[1]}`}
-                                        title="YouTube video"
-                                        allowFullScreen
-                                        className="w-full h-full"
-                                    ></iframe>
-                                </div>
-                            );
-
-                        case 'instagram':
-                            return (
-                                <div key={index} className="my-4">
-                                    <blockquote className="instagram-media" data-instgrm-permalink={block.url}></blockquote>
-                                </div>
-                            );
-
-                        case 'twitter':
-                            return (
-                                <div key={index} className="my-4">
-                                    <blockquote className="twitter-tweet">
-                                        <a href={`https://twitter.com/i/status/${block.tweetId}`}>Lihat di Twitter</a>
-                                    </blockquote>
-                                </div>
-                            );
-
-                        case 'tiktok':
-                            return (
-                                <div key={index} className="my-4">
-                                    <blockquote className="tiktok-embed" cite={block.url}>
-                                        <a href={block.url}>Lihat di TikTok</a>
-                                    </blockquote>
-                                </div>
-                            );
-
-                        default:
-                            return null;
-                    }
-                })}
-            </article>
-        </div>
-
-
+                        return null;
+                    })}
+                </div>
+            </div>
+        </>
     );
-
 }
-
