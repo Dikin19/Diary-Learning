@@ -9,9 +9,9 @@ export default function Navbar() {
 
     // Data tombol dengan link berbeda
     const buttons = [
-        { label: "Popular Diaries", stars: "⭐", color: "#38BDF8", hover: "#0EA5E9", to: "/popular/1" },
-        { label: "Popular Diaries", stars: "⭐⭐", color: "#F472B6", hover: "#EC4899", to: "/popular/2" },
-        { label: "Popular Diaries", stars: "⭐⭐⭐", color: "#FDBA74", hover: "#F59E0B", to: "/popular/3" },
+        { label: "Popular Diaries", stars: "⭐", color: "#A78BFA", hover: "#0EA5E9", to: "/popular/1" },
+        { label: "Popular Diaries", stars: "⭐⭐", color: "#A78BFA", hover: "#EC4899", to: "/popular/2" },
+        { label: "Popular Diaries", stars: "⭐⭐⭐", color: "#A78BFA", hover: "#F59E0B", to: "/popular/3" },
         { label: "Popular Diaries", stars: "⭐⭐⭐⭐", color: "#A78BFA", hover: "#7C3AED", to: "/popular/4" },
     ];
 

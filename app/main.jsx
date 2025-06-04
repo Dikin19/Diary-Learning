@@ -18,7 +18,7 @@ ReactDOM.createRoot(rootElement).render(
       <Routes>
         <Route path="/" element={<DiaryFeed />} />
         <Route path="/reactbits" element={<Reactbits />} />
-        <Route path="/diary" element={<DiaryContent />} />
+        <Route path="/diary/:id" element={<DiaryContent />} />
       </Routes>
     </BrowserRouter>
   </Provider>

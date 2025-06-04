@@ -87,3 +87,19 @@ function Reactbits() {
 export default Reactbits
 
 
+//     <div>
+//     <h1>isi dari diary menggunakan redux</h1>
+//     {diaryItems.map((diary) => (
+//         <di>
+//             <h2>{diary.id}</h2>
+//             <p>{diary.content}</p>
+//         </di>
+//     ))}
+// </div>
+
+// < h2 className = "text-center text-4xl font-bold text-[#A78BFA] mb-12 mt-10" >
+//   <ScrollVelocity
+//     texts={['Thank you for coming']}
+//     className="text-white text-3xl"
+//   />
+//               </ >
