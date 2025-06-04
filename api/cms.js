@@ -30,7 +30,7 @@ import { apiClient } from './client.js'
 
         const response = await apiClient.get('/cms/diary',{
           params: {
-            ids,
+            id: ids,
             status: 'posted'
           },
         });
@@ -40,7 +40,8 @@ import { apiClient } from './client.js'
         
       } catch (error) {
 
-        const message = error.response? error.response.data?.message || `API Error: ${error.response.status}`: error.message
+        const message = error.response? 
+        error.response.data?.message || `API Error: ${error.response.status}`: error.message
         throw new Error (message)
       }
     }
@@ -72,3 +73,32 @@ import { apiClient } from './client.js'
 // export async function getDiaryContentById(id) {
 //   ...
 // }
+
+
+
+// import React, { useEffect } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { fetchDiariy } from "../store/ProductSlice";
+// // import { fetchDiariy } from "./path/to/ProductSlice";
+
+// function DiaryList() {
+//     const dispatch = useDispatch();
+//     const items = useSelector((state) => state.product.items);
+//     console.log(items, 'ada gakk')
+//     const isLoading = useSelector((state) => state.product.isLoading);
+
+//     useEffect(() => {
+//         dispatch(fetchDiariy());
+//     }, [dispatch]);
+
+//     if (isLoading) return <p>Loading...</p>;
+
+//     return (
+//         <div>
+//             <h1>dikin {items.id}</h1>
+//         </div>
+//     );
+
+// }
+
+// export default DiaryList;
