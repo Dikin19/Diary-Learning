@@ -10,7 +10,6 @@ export default function DiaryCard({ id, title, description, imgUrl }) {
                 <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center">
                     <a
                         href={`/diary/${id}`}
-                        target="_blank"
                         rel="noopener noreferrer"
                         className="h-12 w-12 flex items-center justify-center rounded-full border border-white/30 bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:border-white transition duration-300 shadow-md"
                         title="View Diary"

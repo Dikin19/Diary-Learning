@@ -1,5 +1,5 @@
 export default function YoutubeEmbed({ url }) {
-    console.log(url, 'kkkkkk');
+    // console.log(url, 'kkkkkk');
     const cleanUrl = decodeURIComponent(url.replace(/\\\//g, '/'));
 
     const getYoutubeVideoId = (url) => {
