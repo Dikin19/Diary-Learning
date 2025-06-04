@@ -46,7 +46,7 @@ import { getDiaryContentById, getDiaryFeed } from "../../api/cms";
             try {
 
                 const diaries = await getDiaryFeed()
-                // console.log(diaries, 'product slice berhaisil')
+                // console.log(diaries, 'productslice berhaisil')
                 dispatch(fetchDiaries(diaries))
                 
             } catch (error) {
@@ -65,7 +65,7 @@ import { getDiaryContentById, getDiaryFeed } from "../../api/cms";
             try {
                 
                 const diariesById = await getDiaryContentById(id)
-                console.log(diariesById, 'productSlice');
+                // console.log(diariesById, 'product Slice berhasil');
                 dispatch(fecthDiaryById(diariesById))
 
             } catch (error) {
