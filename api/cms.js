@@ -70,35 +70,40 @@ import { apiClient } from './client.js'
  * Note that:
  * - `status` param must exist and have value of `'posted'`
  */
-// export async function getDiaryContentById(id) {
-//   ...
-// }
+  export async function getDiaryContentById(id) {
 
+    try {
 
+      const response = await apiClient.get('/cms/diary',{
 
-// import React, { useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { fetchDiariy } from "../store/ProductSlice";
-// // import { fetchDiariy } from "./path/to/ProductSlice";
+        params: {
+          id,
+          status: 'posted'
+        }
+      })
 
-// function DiaryList() {
-//     const dispatch = useDispatch();
-//     const items = useSelector((state) => state.product.items);
-//     console.log(items, 'ada gakk')
-//     const isLoading = useSelector((state) => state.product.isLoading);
+      return response.data
+      
+    } catch (error) {
+      
+      const message = error.response? 
+      error.response.data?.message || `API Error: ${error.response.status}`: error.message
+      throw new Error (message)
+    }
+  }
 
-//     useEffect(() => {
-//         dispatch(fetchDiariy());
-//     }, [dispatch]);
+  // const checkById =async (id)=>{
 
-//     if (isLoading) return <p>Loading...</p>;
+  //   try {
 
-//     return (
-//         <div>
-//             <h1>dikin {items.id}</h1>
-//         </div>
-//     );
+  //     const diary = await getDiaryContentById(id)
 
-// }
+  //     console.log(diary,'hasil dari diary');
+      
+  //   } catch (error) {
+  //     console.log(error, 'error fetching data')
+  //   }
 
-// export default DiaryList;
+  // }
+
+  // console.log(await checkById('342861'));
