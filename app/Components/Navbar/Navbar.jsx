@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import RotatingText from '../Reactbits/RotatingText/RotatingText';
-
 const pollinationsUrl = `https://image.pollinations.ai/prompt/wisata%20app%20logo?width=500&height=500&nologo=true`;
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
 
-    // Data tombol dengan link berbeda
     const buttons = [
         { label: "Popular Diaries", stars: "⭐", color: "#A78BFA", hover: "#0EA5E9", to: "/diary/253782 " },
         { label: "Popular Diaries", stars: "⭐⭐", color: "#A78BFA", hover: "#EC4899", to: "/diary/296907  " },
@@ -18,26 +15,15 @@ export default function Navbar() {
     return (
         <nav className="fixed top-0 left-0 w-full bg-[#FFF7ED] border-b border-[#E5E7EB] shadow-sm z-50">
             <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
-                {/* Logo + Title */}
+
                 <div className="flex items-center">
                     <img
-                        src={pollinationsUrl}
+                        src='/App.png'
                         alt="Wisata App Logo"
                         className="h-8 w-8 mr-3 rounded-full object-cover shadow-sm"
                     />
                     <span className="font-bold text-xl text-[#3E2C23] ml-1 mr-10">
-                        <RotatingText
-                            texts={["Wisata", "App", "Wisata App"]}
-                            mainClassName="text-[#3E2C23] justify-center rounded-lg"
-                            staggerFrom={"last"}
-                            initial={{ y: "100%" }}
-                            animate={{ y: 0 }}
-                            exit={{ y: "-120%" }}
-                            staggerDuration={0.025}
-                            splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-                            transition={{ type: "spring", damping: 30, stiffness: 400 }}
-                            rotationInterval={2000}
-                        />
+                        WISATA APP
                     </span>
                 </div>
 

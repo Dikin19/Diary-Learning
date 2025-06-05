@@ -5,8 +5,9 @@ import Navbar from "../Components/Navbar/Navbar";
 import { motion, useInView } from "framer-motion";
 import CircularText from "../Components/Reactbits/CircularText/CircularText";
 import DiaryCard from "../Components/DiaryFeed/DiaryCard";
-import RotatingText from "../Components/Reactbits/RotatingText/RotatingText";
+import SplitText from "../Components/Reactbits/SplitText/SplitText";
 import AnimatedContent from "../Components/Reactbits/AnimatedContent/AnimatedContent";
+
 
 export default function DiaryFeed() {
     const ref = useRef(null);
@@ -49,24 +50,20 @@ export default function DiaryFeed() {
             className="min-h-screen overflow-x-hidden bg-[#FFF7ED] relative text-[#3E2C23] px-4 md:px-20"
         >
 
-            <AnimatedContent>
-                <Navbar />
-            </AnimatedContent>
+
+            <Navbar />
 
             <section className="py-12 pt-24">
 
                 <div className="flex justify-center items-center mt-5 mb-10">
-                    <RotatingText
-                        texts={['Welcome', 'to Our Diary', 'Enjoy Your Time Here']}
-                        mainClassName="bg-[#FFF7ED] text-[#3E2C23] text-2xl md:text-3xl font-semibold px-4 py-2 rounded-lg shadow-md"
-                        staggerFrom="last"
-                        initial={{ y: "100%" }}
-                        animate={{ y: 0 }}
-                        exit={{ y: "-120%" }}
-                        staggerDuration={0.025}
-                        splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-                        transition={{ type: "spring", damping: 30, stiffness: 400 }}
-                        rotationInterval={2000}
+                    <SplitText
+                        text="Welcome to Our Diaries Enjoy Your Time Here"
+                        className="text-2xl text-black font-semibold text-start"
+                        delay={50}
+                        animationFrom={{ opacity: 0, transform: 'translate3d(0,50px,0)' }}
+                        animationTo={{ opacity: 1, transform: 'translate3d(0,0,0)' }}
+                        threshold={0.2}
+                        rootMargin="-50px"
                     />
                 </div>
 
@@ -93,6 +90,8 @@ export default function DiaryFeed() {
                                     title={diary.meta.title}
                                     description={diary.meta.description}
                                     imgUrl={diary.meta.image}
+                                    created_dt={diary.created_dt}
+                                    meta={diary.meta}
                                 />
                             </motion.div>
                         ))}

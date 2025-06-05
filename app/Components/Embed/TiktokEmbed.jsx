@@ -3,7 +3,6 @@ import { useEffect, useRef } from "react";
 export default function TiktokEmbed({ url }) {
     const containerRef = useRef();
 
-    // Fungsi bersihkan URL, hapus backslash dan whitespace
     const cleanUrl = (rawUrl) => {
         if (!rawUrl) return "";
         return rawUrl.replace(/\\/g, "").trim();
@@ -11,7 +10,7 @@ export default function TiktokEmbed({ url }) {
 
     const safeUrl = cleanUrl(url);
 
-    // Ambil videoId dari URL TikTok
+
     const match = safeUrl.match(/\/video\/(\d+)/);
     const videoId = match ? match[1] : null;
 
@@ -20,7 +19,7 @@ export default function TiktokEmbed({ url }) {
     const embedUrl = `https://www.tiktok.com/embed/v2/${videoId}`;
 
     useEffect(() => {
-        // bisa ditambah jika ada skrip TikTok yang harus dimuat
+
     }, [videoId]);
 
     return (

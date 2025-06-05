@@ -12,41 +12,9 @@ import TwitterEmbed from "../Components/Embed/TwitterEmbed.jsx";
 import TiktokEmbed from "../Components/Embed/TiktokEmbed.jsx";
 import Navbarr from "../Components/Navbar/Navbar";
 import CircularText from "../Components/Reactbits/CircularText/CircularText";
-
-function sanitizeTextContent(text) {
-    if (!text) return "";
-
-    const escapedText = text
-        .replace(/\\\./g, ".")
-        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-        .replace(/__(.*?)__/g, "<em>$1</em>")
-        .replace(/\n/g, "<br/>")
-        .replace(/(\bhttps?:\/\/[^\s<]+\.(?:jpg|jpeg|png|webp|gif))/gi, "")
-        .replace(
-            /(\bhttps?:\/\/[^\s<]+)/g,
-            '<a href="$1" class="text-blue-600 underline hover:text-blue-800 transition-colors break-words" target="_blank" rel="noopener noreferrer">$1</a>'
-        );
-
-    return escapedText.trim();
-}
-
-function RenderImage({ src, alt = "Image", optimize = true }) {
-    const optimizedUrl = optimize ? getSizeOptimizedImageUrl(src, "md") : src; // 'md' untuk ukuran medium
-    return (
-        <div className="flex justify-center my-6">
-            <img
-                src={optimizedUrl || "/fallback-image.png"}
-                alt={alt}
-                className="w-full max-w-xl rounded-xl my-6 shadow-sm object-cover transition-transform duration-300 hover:scale-105"
-                loading="lazy"
-                onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "/fallback-image.png";
-                }}
-            />
-        </div>
-    );
-}
+import { Footer } from "../Components/DiaryContent/Footer.jsx";
+import { Button } from "../Components/DiaryContent/Button.jsx";
+import { sanitizeTextContent } from "../Components/DiaryContent/TextRender.jsx";
 
 
 export default function DiaryContent() {
@@ -75,7 +43,7 @@ export default function DiaryContent() {
 
     if (error) {
         return (
-            <p className="text-red-600 text-center mt-16 font-semibold text-lg">
+            <p className="text-[#6366F1] text-center mt-16 font-semibold text-lg">
                 {error}
             </p>
         );
@@ -84,7 +52,7 @@ export default function DiaryContent() {
     const diary = response?.content?.[0];
     if (!diary) {
         return (
-            <p className="text-center mt-20 text-gray-700 text-lg font-medium">
+            <p className="text-center mt-20 text-[#6366F1] text-lg font-medium">
                 Diary tidak ditemukan.
             </p>
         );
@@ -92,6 +60,8 @@ export default function DiaryContent() {
 
     const rendered = renderDiaryContent(diary);
     const seo = getDiaryContentSEOAttributes(diary);
+
+
 
     return (
         <>
@@ -107,31 +77,20 @@ export default function DiaryContent() {
             </Helmet>
 
             <div className="min-h-screen overflow-x-hidden bg-[#FFF7ED] text-[#3E2C23] px-4 md:px-20">
+
                 <Navbarr />
 
-                <h1 className="text-5xl font-extrabold mb-8 leading-tight tracking-tight text-indigo-600 drop-shadow-sm">
+                <Button diary={diary} />
+
+                <h1 className="text-5xl font-extrabold mb-8 leading-tight tracking-tight text-[#7C3AED] drop-shadow-sm text-center">
                     {diary.meta?.title || "Tanpa Judul"}
                 </h1>
-
-                <div className="flex flex-wrap text-gray-500 text-sm mb-10 space-x-6">
-                    <p>
-                        <span className="font-semibold">Status:</span>{" "}
-                        <span className="text-pink-600">{diary.status}</span>
-                    </p>
-                    <p>
-                        <span className="font-semibold">Dibuat:</span>{" "}
-                        {new Date(diary.created_dt).toLocaleString(undefined, {
-                            dateStyle: "long",
-                            timeStyle: "short",
-                        })}
-                    </p>
-                </div>
 
                 <article className="prose prose-lg prose-indigo max-w-none leading-relaxed text-gray-800">
                     {rendered.contentBlocks.map((block, idx) => {
                         switch (block.type) {
                             case "paragraph": {
-                                // Embed detection
+                                // Jika paragraf berisi embed dalam bentuk string custom (contoh kamu sebelumnya)
                                 const match = block.text.match(
                                     /<(YoutubeEmbed|InstagramEmbed|TiktokEmbed|TwitterEmbed)\s+url="([^"]+)"\s*\/?>/
                                 );
@@ -158,7 +117,10 @@ export default function DiaryContent() {
                                             );
                                         case "TwitterEmbed":
                                             return (
-                                                <div key={idx} className="flex justify-center my-6 max-w-xl mx-auto my-6">
+                                                <div
+                                                    key={idx}
+                                                    className="flex justify-center my-6 max-w-xl mx-auto my-6"
+                                                >
                                                     <TwitterEmbed tweetId={url} />
                                                 </div>
                                             );
@@ -181,11 +143,17 @@ export default function DiaryContent() {
                             }
 
                             case "heading":
-                                if (block.level === 3) {
+                                if ([2, 3, 4].includes(block.level)) {
+                                    const Tag = `h${block.level}`;
                                     return (
-                                        <h3
+                                        <Tag
                                             key={idx}
-                                            className="text-3xl font-semibold mt-14 mb-6 text-indigo-600 border-l-4 border-yellow-400 pl-5"
+                                            className={`mt-10 mb-6 text-indigo-600 ${block.level === 3
+                                                ? "text-3xl font-semibold border-l-4 border-yellow-400 pl-5"
+                                                : block.level === 2
+                                                    ? "text-4xl font-bold"
+                                                    : "text-2xl font-semibold"
+                                                }`}
                                             dangerouslySetInnerHTML={{ __html: sanitizeTextContent(block.text) }}
                                         />
                                     );
@@ -200,16 +168,30 @@ export default function DiaryContent() {
                                         style={{ listStyleType: "disc", listStylePosition: "inside" }}
                                     >
                                         {block.items.map((item, i) => (
-                                            <li
-                                                key={i}
-                                                dangerouslySetInnerHTML={{ __html: sanitizeTextContent(item) }}
-                                            />
+                                            <li key={i} dangerouslySetInnerHTML={{ __html: sanitizeTextContent(item) }} />
                                         ))}
                                     </ul>
                                 );
 
                             case "image":
-                                return <RenderImage key={idx} src={block.url} alt="Diary Image" />;
+                                return (
+                                    <div key={idx} className="flex justify-center my-6">
+                                        <img
+                                            src={getSizeOptimizedImageUrl(block.url, "md")}
+                                            alt={block.alt || "Diary Image"}
+                                            className="w-full max-w-xl rounded-xl shadow-sm object-cover transition-transform duration-300 hover:scale-105"
+                                            loading="lazy"
+                                            onError={(e) => {
+                                                // Fallback otomatis ke original image jika _md gagal
+                                                const originalUrl = e.target.src.replace(/_md(\.\w+)$/, '$1');
+                                                e.target.onerror = null;
+                                                e.target.src = originalUrl;
+                                            }}
+                                        />
+
+                                    </div>
+                                );
+
 
                             case "youtube":
                                 return <YoutubeEmbed key={idx} url={block.url} />;
@@ -223,19 +205,23 @@ export default function DiaryContent() {
                             case "tiktok":
                                 return <TiktokEmbed key={idx} url={block.url} />;
 
+                            case "blockquote":
+                                return (
+                                    <blockquote
+                                        key={idx}
+                                        className="border-l-4 border-indigo-500 pl-4 italic text-gray-600 my-6"
+                                        dangerouslySetInnerHTML={{ __html: sanitizeTextContent(block.text) }}
+                                    />
+                                );
+
                             default:
                                 return null;
                         }
                     })}
 
-                    <footer className="mt-16 border-t pt-6 text-sm text-gray-500 italic">
-                        Terakhir diperbarui pada:{" "}
-                        {new Date(diary.updated_dt || diary.created_dt).toLocaleDateString(undefined, {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                        })}
-                    </footer>
+                    <Button diary={diary} />
+                    <Footer diary={diary} />
+
                 </article>
             </div>
         </>

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client'; // ✅ React 18
 import { BrowserRouter, Routes, Route } from 'react-router-dom'; // ✅ gunakan `Routes`, bukan `Switch`
 import { Provider } from 'react-redux';
 
-import Reactbits from './Pages/Reactbits';
 import DiaryContent from './Pages/DiaryContent';
 import DiaryFeed from './Pages/DiaryFeed';
 import './Css/index.css';
@@ -17,7 +16,6 @@ ReactDOM.createRoot(rootElement).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<DiaryFeed />} />
-        <Route path="/reactbits" element={<Reactbits />} />
         <Route path="/diary/:id" element={<DiaryContent />} />
       </Routes>
     </BrowserRouter>
