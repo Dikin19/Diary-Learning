@@ -34,16 +34,16 @@ a. Fungsi parseToBlocks(markdown)
     - Tujuan utama adalah mempermudah frontend dalam merender konten sesuai jenis komponennya.
 
 - Contoh output dari fungsi ini:
-    [
-  { type: 'heading', level: 1, content: 'Judul Utama' },
-  { type: 'paragraph', content: 'Ini adalah paragraf biasa.' },
-  { type: 'image', url: 'https://...' },
-  { type: 'list', items: ['Item 1', 'Item 2'] }
-    ]
+  - [
+  - { type: 'heading', level: 1, content: 'Judul Utama' },
+  - { type: 'paragraph', content: 'Ini adalah paragraf biasa.' },
+  - { type: 'image', url: 'https://...' },
+  - { type: 'list', items: ['Item 1', 'Item 2'] }
+  - ]
 
 b. Fungsi renderContent(blocks)
 - Fungsi ini berjalan di frontend untuk menerima hasil dari parseToBlocks dan me-render-nya menjadi React Components.
-- Setiap tipe blok akan di-render dengan komponen UI yang sesuai (contohnya: <h1>, <p>, <img>, <ul>, dsb).
+- Setiap tipe blok akan di-render dengan komponen UI yang sesuai (contohnya: h1, p, img, ul, dsb).
 
 🖼️ 3. Penggunaan getSizeOptimizedImageUrl :
 - Untuk optimasi tampilan gambar, saya langsung memanggil fungsi getSizeOptimizedImageUrl saat memproses konten gambar.
