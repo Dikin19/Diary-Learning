@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 
 export default function InstagramEmbed({ url }) {
+    // console.log('Instagram :', url)
+
     const containerRef = useRef(null);
 
     useEffect(() => {

@@ -27,6 +27,8 @@ export default function DiaryContent() {
         if (id) dispatch(getDiaryById(id));
     }, [dispatch, id]);
 
+    // console.log('data response :', response)
+
     if (isLoading) {
         return (
             <div className="fixed inset-0 flex justify-center items-center bg-white bg-opacity-90 z-50">
@@ -50,6 +52,8 @@ export default function DiaryContent() {
     }
 
     const diary = response?.content?.[0];
+    // console.log('data diary :', diary)
+
     if (!diary) {
         return (
             <p className="text-center mt-20 text-[#6366F1] text-lg font-medium">
@@ -59,13 +63,16 @@ export default function DiaryContent() {
     }
 
     const rendered = renderDiaryContent(diary);
+    console.log('hasil dari rendered :', rendered)
     const seo = getDiaryContentSEOAttributes(diary);
+    // console.log('function getDiaryContentSEOAttributes :', seo)
 
 
 
     return (
         <>
-            <Helmet>
+            <Helmet // ctrl-u, f12-element 
+            >
                 <title>{seo.title || "Your Diary"}</title>
                 <meta name="description" content={seo.description || ""} />
                 <meta name="keywords" content={seo.keywords || ""} />
@@ -89,13 +96,19 @@ export default function DiaryContent() {
                 <article className="prose prose-lg prose-indigo max-w-none leading-relaxed text-gray-800">
                     {rendered.contentBlocks.map((block, idx) => {
                         switch (block.type) {
-                            case "paragraph": {
-                                // Jika paragraf berisi embed dalam bentuk string custom (contoh kamu sebelumnya)
+                            case "paragraph": { // cek url sosmed di dalam paragraph
                                 const match = block.text.match(
-                                    /<(YoutubeEmbed|InstagramEmbed|TiktokEmbed|TwitterEmbed)\s+url="([^"]+)"\s*\/?>/
-                                );
-                                if (match) {
+                                    /<(YoutubeEmbed|InstagramEmbed|TiktokEmbed|TwitterEmbed)\s+url="([^"]+)"\s*\/?>/ // ini seperti scanner // '<YoutubeEmbed url="https://www.youtube.com/watch?v=abc123" />',
+                                ); // reguler expression mencari url yang cocok
+                                if (match) {  // setelah melalui regex berhasil menjadi array
+                                    /* [
+                                        'Keseluruhan: <YoutubeEmbed url="https://www.youtube.com/watch?v=abc123" />',
+                                        'Jenis: YoutubeEmbed',
+                                        'Link: https://www.youtube.com/watch?v=abc123'
+                                        ]
+                                    */
                                     const [, type, url] = match;
+                                    // console.log('type', type)
                                     switch (type) {
                                         case "YoutubeEmbed":
                                             return (
@@ -227,3 +240,55 @@ export default function DiaryContent() {
         </>
     );
 }
+
+
+//<div className="min-h-screen overflow-x-hidden bg-[#FFF7ED] text-[#3E2C23] px-4 md:px-20">
+/*
+min-h-screen	    Minimum tinggi sebesar tinggi layar (100vh) — agar konten memenuhi layar.
+overflow-x-hidden	Menyembunyikan scroll horizontal (mencegah konten meluber ke samping).
+bg-[#FFF7ED]	    Warna latar belakang soft cream (#FFF7ED).
+text-[#3E2C23]	    Warna teks coklat gelap (seperti kopi).
+px-4	            Padding kiri-kanan 1rem (untuk HP).
+md:px-20	        Padding kiri-kanan 5rem (saat layar medium ke atas, seperti laptop).
+*/
+
+// className="text-5xl font-extrabold mb-8 leading-tight tracking-tight text-[#7C3AED] drop-shadow-sm text-center">
+/*
+Kelas Tailwind	Arti
+text-5xl	    Ukuran teks sangat besar.
+font-extrabold	Ketebalan font ekstra tebal.
+mb-8	        Margin bawah sebesar 2rem.
+leading-tight	Jarak antar baris teks lebih rapat.
+tracking-tight	Jarak antar huruf lebih rapat.
+text-[#7C3AED]	Warna teks ungu terang.
+drop-shadow-sm	Bayangan halus agar teks menonjol.
+text-center	Teks rata tengah.
+*/
+
+//<article className="prose prose-lg prose-indigo max-w-none leading-relaxed text-gray-800">
+/*
+prose dari Tailwind Typography Plugin:  otomatis membuat teks jadi indah & profesional (ukuran font, spasi, dsb).
+prose-lg:                               ukuran font besar.
+prose-indigo:                           warna elemen seperti link jadi ungu.
+max-w-none:                             konten tidak dibatasi lebar maksimal.
+leading-relaxed:                        jarak antar baris nyaman dibaca.
+text-gray-800:                          warna teks abu-abu gelap.
+*/
+
+// reguler expression
+/*
+| Bagian RegEx                                                | Arti                                                           |
+| ----------------------------------------------------------- | -------------------------------------------------------------- |
+| `<`                                                         | Harus dimulai dengan karakter `<` (seperti HTML tag)           |
+| `(YoutubeEmbed\|InstagramEmbed\|TiktokEmbed\|TwitterEmbed)` | Grup yang cocok dengan salah satu dari 4 komponen embed        |
+| `\s+`                                                       | Wajib ada minimal 1 spasi                                      |
+| `url="([^"]+)"`                                             | Mencocokkan bagian `url="..."`, dan mengambil isinya (URL-nya) |
+| `\s*`                                                       | Boleh ada spasi kosong setelah `"`                             |
+| `/?>`                                                       | Tag ditutup dengan `/>` atau `>`                               |
+
+*/
+
+//
+/*
+
+*/

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo } from "react"; //  untuk menghindari pengacakan ulang setiap kali render loop items.
 import RotatingText from "../Reactbits/RotatingText/RotatingText";
 
 const names = [
@@ -43,7 +43,9 @@ export const Button = ({ diary }) => {
 
     return (
         <div className="mt-4 mb-2 px-4 flex justify-between items-center">
+
             <div className="flex items-center space-x-3">
+
                 <div className="w-8 h-8 rounded-full overflow-hidden">
                     <img
                         src={pollinationsUrl}
@@ -51,6 +53,7 @@ export const Button = ({ diary }) => {
                         className="w-8 h-8 object-cover"
                     />
                 </div>
+
                 <div className="text-sm text-gray-700">
                     <span className="font-bold text-xl text-[#3E2C23] ml-1 mr-10">
                         <RotatingText
@@ -67,7 +70,21 @@ export const Button = ({ diary }) => {
                         />
                     </span>
                 </div>
+
             </div>
+
         </div>
     );
 };
+
+//<div className="mt-4 mb-2 px-4 flex justify-between items-center">
+/*
+Class	           Fungsi
+mt-4	           Margin atas 1rem
+mb-2	           Margin bawah 0.5rem
+px-4	           Padding kiri dan kanan 1rem
+flex	           Flexbox horizontal
+justify-between	   Komponen dalamnya (kiri & kanan) berada di ujung
+items-center	   Vertikal center (logo dan teks sejajar)
+*/
+

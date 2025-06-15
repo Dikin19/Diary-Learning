@@ -1,6 +1,10 @@
 export default function YoutubeEmbed({ url }) {
     // console.log(url, 'embedYoutube');
-    const cleanUrl = decodeURIComponent(url.replace(/\\\//g, '/'));
+    const cleanUrl = decodeURIComponent(url.replace(/\\\//g, '/')); // clean code
+    /*
+    Input URL: https:\\/\\/www.youtube.com\\/watch%3Fv%3Dabc123
+    cleanUrl: https://www.youtube.com/watch?v=abc123
+    */
 
     const getYoutubeVideoId = (url) => {
         try {
@@ -14,6 +18,7 @@ export default function YoutubeEmbed({ url }) {
 
             if (parsed.hostname.includes('youtu.be')) {
                 return parsed.pathname.slice(1);
+
             } else if (parsed.hostname.includes('youtube.com')) {
                 return parsed.searchParams.get('v');
             }

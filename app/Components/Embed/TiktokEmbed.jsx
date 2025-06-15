@@ -1,17 +1,20 @@
 import { useEffect, useRef } from "react";
 
 export default function TiktokEmbed({ url }) {
+    // console.log('TiktokEmbed :', url)
+
     const containerRef = useRef();
 
     const cleanUrl = (rawUrl) => {
         if (!rawUrl) return "";
-        return rawUrl.replace(/\\/g, "").trim();
+        return rawUrl.replace(/\\/g, "").trim(); // Menghapus tanda \ (backslash) dari URL jika ada (kadang error parsing).
     };
 
     const safeUrl = cleanUrl(url);
+    // console.log('url', safeUrl)
 
 
-    const match = safeUrl.match(/\/video\/(\d+)/);
+    const match = safeUrl.match(/\/video\/(\d+)/); // mencari video
     const videoId = match ? match[1] : null;
 
     if (!videoId) return null;

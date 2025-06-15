@@ -4,13 +4,13 @@
  * TASK: Implement API client for fetching data from the backend API endpoint
 */
 
-import axios from 'axios';
+import axios from 'axios'; // library
 
     const API_BASE_URL = "https://project-tempest-hiring.up.railway.app"
 
     const apiClient = axios.create({
         baseURL: API_BASE_URL,
-        header: {
+        headers: {
             'Content-Type': 'application/json'
         },
     });
